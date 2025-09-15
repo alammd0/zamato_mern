@@ -121,7 +121,6 @@ export const logoutUser = async (req, res) => {
     }
 }
  
-
 // all for food partner register
 export const registerFoodPartner = async (req, res) => {
     try{
