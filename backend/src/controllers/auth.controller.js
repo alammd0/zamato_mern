@@ -5,7 +5,6 @@ import bcrypt from "bcryptjs";
 // import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-
 // all for user register
 export const registerUser = async (req, res) => {
     try{
@@ -120,60 +119,70 @@ export const logoutUser = async (req, res) => {
         });
     }
 }
- 
 
-// all for food partner register
+// all for food partner register ( remainder test)
 export const registerFoodPartner = async (req, res) => {
-    try{
-        
-        const { fname, email, password } = req.body ;
+    try {
+        // fetch data of food partner
+        const { ownerName, email, contactNumber, restaurantName,address, typeofRestaurant, password } = req.body;
 
-        if(!fname || !email){
+        if(!ownerName || !email || !restaurantName || !address || !typeofRestaurant){
             return res.status(400).json({
-                message : "Please provide call the required fields"
+                message : "Please provide all the required fields"
             })
-        };
+        }
 
+        // check if food partner already exists
         const existingFoodPartner = await FoodPartner.findOne({ email });
 
-        if(existingFoodPartner){
+        if(existingFoodPartner) {
             return res.status(400).json({
-                message : "Food partner already exists"
+                message : "Food partner already exists",    
             })
-        };
+        }
 
+        // hased password 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const foodPartner = await FoodPartner.create({
-            fname,
+        // if food partner does not exist, create it
+        const newFoodPartner = await FoodPartner.create({
+            ownerName,
             email,
-            password : hashedPassword   
-        })
+            contactNumber,
+            restaurantName,
+            address,
+            typeofRestaurant,
+            password : hashedPassword
+        }); 
 
-        const token = jwt.sign({ userId : foodPartner._id, email : foodPartner.email }, process.env.JWT_SECRET);
+        // generate token 
+        const token = jwt.sign({ userId : newFoodPartner._id, email : newFoodPartner.email }, process.env.JWT_SECRET);
 
         // set token in cookie
         res.cookie("token", token, { httpOnly : true });
 
         return res.status(201).json({
             message : "Food partner registered successfully",
-            token : token,
+            token,
             foodPartner : {
-                _id : foodPartner._id,
-                email : foodPartner.email,
-                name : foodPartner.name
+                _id : newFoodPartner._id,
+                ownerName : newFoodPartner.ownerName,
+                email : newFoodPartner.email,
+                contactNumber : newFoodPartner.contactNumber,
+                restaurantName : newFoodPartner.restaurantName,
+                address : newFoodPartner.address,
+                typeofRestaurant : newFoodPartner.typeofRestaurant
             }
         })
-
     }
-    catch(err){
-        console.error(err);
+    catch (err){
         return res.status(500).json({
             message : "Internal server error"
         });
     }
 }
 
+// all for food partner login
 export const loginFoodPartner = async (req, res) => {
     try {
         const { email, password } = req.body ;
@@ -212,11 +221,7 @@ export const loginFoodPartner = async (req, res) => {
         return res.status(200).json({
             message : "Food partner logged in successfully",
             token : token,
-            foodPartner : {
-                _id : foodPartnerExits._id,
-                email : foodPartnerExits.email,
-                name : foodPartnerExits.name
-            }
+            foodPartner : foodPartner
         })
     }
     catch(err){
@@ -233,6 +238,33 @@ export const logoutFoodPartner = async (req, res) => {
         return res.status(200).json({
             message : "Food partner logged out successfully"
         })
+    }
+    catch(err){
+        console.error(err);
+        return res.status(500).json({
+            message : "Internal server error"
+        });
+    }
+}
+
+// reset password through email
+// 1. Send email to food partner and user to ask for password reset
+export const sendResetPasswordEmail = async (req, res) => {
+    try{
+
+    }
+    catch(err){
+        console.error(err);
+        return res.status(500).json({
+            message : "Internal server error"
+        });
+    }
+}
+
+// 2. Food partner and user click on the link in the email and reset password
+export const resetPassword = async (req, res) => {
+    try{
+
     }
     catch(err){
         console.error(err);
