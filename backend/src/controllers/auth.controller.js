@@ -1,9 +1,9 @@
-
+import { sendEmail } from "../config/send.nodemailer.js";
 import User from "../models/auth.model.js"
 import FoodPartner from "../models/foodPartner.model.js";
 import bcrypt from "bcryptjs";
-// import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { resetMessage } from "../templates/reset.message.js";
 
 // all for user register
 export const registerUser = async (req, res) => {
@@ -221,7 +221,7 @@ export const loginFoodPartner = async (req, res) => {
         return res.status(200).json({
             message : "Food partner logged in successfully",
             token : token,
-            foodPartner : foodPartner
+            foodPartner : foodPartnerExits
         })
     }
     catch(err){
@@ -251,7 +251,65 @@ export const logoutFoodPartner = async (req, res) => {
 // 1. Send email to food partner and user to ask for password reset
 export const sendResetPasswordEmail = async (req, res) => {
     try{
+        const { email } = req.body ; 
+        // console.log(email);
 
+        if(!email){
+            return res.status(400).json({
+                message : "Please provide all the required fields"
+            })
+        }
+
+        const user = await User.findOne({ email });
+        // console.log(user);
+        const foodPartner = await FoodPartner.findOne({ email });
+        // console.log(foodPartner);
+
+        if(!user && !foodPartner){
+            return res.status(400).json({
+                message : "User or food partner does not exist"
+            })
+        }
+
+        let token ;
+        if(user){
+            const payload = {
+                id : user.id,
+                email : user.email
+            }
+            token =  jwt.sign(payload, process.env.JWT_SECRET, {
+                expiresIn : "10min"
+            })
+        }
+        else{
+            const payload = {
+                id : foodPartner.id,
+                email : foodPartner.email
+            }
+
+            token = jwt.sign(payload, process.env.JWT_SECRET, {
+                expiresIn : "10min"
+            })
+        }
+
+        const resetPasswordLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+        const {html, text} = resetMessage(resetPasswordLink);
+        // console.log(text);
+        const subject = "Reset Password";
+
+        // if user exists, send email to user
+        if(user){
+            await sendEmail(user.email, subject, text, html);
+            return res.status(200).json({
+                message : "Email sent to user"
+            })
+        }
+        else{
+            await sendEmail(foodPartner.email, subject, text, html);
+            return res.status(200).json({
+                message : "Email sent to food partner"
+            })
+        }
     }
     catch(err){
         console.error(err);
@@ -264,7 +322,55 @@ export const sendResetPasswordEmail = async (req, res) => {
 // 2. Food partner and user click on the link in the email and reset password
 export const resetPassword = async (req, res) => {
     try{
+        const { password, confirmPassword } = req.body ; 
+        // console.log(password, confirmPassword);
+        const token = req.query.token;
+        // console.log("Token from URL:", token);
+      
 
+        if(!password || !confirmPassword || !token){
+            return res.status(400).json({
+                message : "Please provide all the required fields"
+            })
+        }
+
+        // check token is valid 
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        if(!decoded){
+            return res.status(400).json({
+                message : "Invalid token"
+            })
+        }
+
+        const user = await User.findOne({ email : decoded.email });
+        const foodPartner = await FoodPartner.findOne({ email : decoded.email });
+
+        if(!user && !foodPartner){
+            return res.status(400).json({
+                message : "User or food partner does not exist"
+            })
+        }
+
+        if(password !== confirmPassword){
+            return res.status(400).json({
+                message : "Password and confirm password do not match"
+            })
+        }
+        
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        if(user){
+            user.password = hashedPassword;
+            await user.save();
+        }else{
+            foodPartner.password = hashedPassword;
+            await foodPartner.save();
+        }
+
+        return res.status(200).json({
+            message : "Password reset successfully"
+        })
     }
     catch(err){
         console.error(err);
