@@ -216,8 +216,8 @@ export const loginFoodPartner = async (req, res) => {
         const token =  jwt.sign({ userId : foodPartnerExits._id, email : foodPartnerExits.email }, process.env.JWT_SECRET);
 
         // set token in cookie
-        res.cookie("token", token, { httpOnly : true });
-
+        res.cookie("token", token, { httpOnly : true, sameSite : "strict" });
+        
         return res.status(200).json({
             message : "Food partner logged in successfully",
             token : token,
