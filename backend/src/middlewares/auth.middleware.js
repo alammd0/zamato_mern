@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
-import User from "../models/auth.model";
+import User from "../models/auth.model.js";
+import FoodPartner from "../models/foodPartner.model.js";
 
 export const authUserMiddleware = async (req, res, next) => {
     const token = req.cookies.token;
@@ -35,6 +36,7 @@ export const authUserMiddleware = async (req, res, next) => {
 }
 
 export const authFoodPartnerMiddleware = async (req, res, next) => {
+
     const token = req.cookies.token;
 
     if(!token){
@@ -47,7 +49,7 @@ export const authFoodPartnerMiddleware = async (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         // check if food partner exists
-        const foodPartner = await User.findById(decoded.userId);
+        const foodPartner = await FoodPartner.findById(decoded.userId);
 
         if(!foodPartner){
             return res.status(401).json({
