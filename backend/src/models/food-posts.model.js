@@ -8,40 +8,50 @@ const FoodPostSchema = new mongoose.Schema({
     },
 
     description : {
-        type : String,
-        required : true
+        type : String
     },
 
-    imageUrl : {
-        type : String,
-        required : true
-    },
-
-    tags : {
-        type : [String],
-        required : true
-    },
-
-    postLikes : {
-        type: mongoose.Schema.Types.ObjectId,
-        ref : "PostLike"
-    },
-
-    comments : {
-        type: mongoose.Schema.Types.ObjectId,
-        ref : "PostComment"
-    },
+    // imageUrl : {
+    //     type : String,
+    //     required : true
+    // },
     
-    saves : {
-        type: mongoose.Schema.Types.ObjectId,
-        ref : "PostSave"
-    },
+    imageUrl : [
+        {
+            type : String,
+        }
+    ],
+
+    tags : [
+        {
+            type : String
+        }
+    ],
 
     foodPartner : {
         type : mongoose.Schema.Types.ObjectId,
         ref : "FoodPartner"
     },
-    
+
+    postLikes : [
+        {
+            type : mongoose.Schema.Types.ObjectId,
+            ref : "PostLike"
+        }
+    ],
+
+    comments : [{
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "PostComment"
+    }],
+
+    saves : [
+        {
+            type : mongoose.Schema.Types.ObjectId,
+            ref : "PostSave"
+        }
+    ],
+
     createdAt : {
         type : Date,
         default : Date.now

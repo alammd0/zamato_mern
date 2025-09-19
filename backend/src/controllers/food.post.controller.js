@@ -1,6 +1,6 @@
 import FoodPost from "../models/food-posts.model.js";
-import User from "../models/auth.model.js";
 import { fileUpload } from "../config/file.upload.cloudinary.js";
+import FoodPartner from "../models/foodPartner.model.js";
 
 
 export const createFoodPost = async (req, res) => {
@@ -14,24 +14,40 @@ export const createFoodPost = async (req, res) => {
             })
         }
 
-        const file = req.file;
+        // console.log(typeof tags);
 
-        if(!file){
+        let tag;
+        // covert tags to array
+        if(typeof tags === "string"){
+            tag = [tags];
+        }
+
+        const files = req.files;
+        if(files.length === 0){
             return res.status(400).json({
                 message : "Please provide image"
             })
         }
 
-        const imageUrl = await fileUpload(file);
+        const uploadResponse = await fileUpload(files);
 
         const foodPost = await FoodPost.create({
             nameOfFood,
             description,
-            imageUrl : imageUrl,
-            tags : tags,
+            imageUrl : uploadResponse,
+            tags : tag.map(t => t.toString()),
             foodPartner : req.foodPartnerId
         })
 
+        const foodPartner = await FoodPartner.findById(req.foodPartnerId);
+
+        if(!foodPartner){
+            return res.status(404).json({
+                message : "Food partner does not exist"
+            })
+        }
+        foodPartner.foodPosts.push(foodPost._id);
+        await foodPartner.save();
         return res.status(201).json({
             message : "Food post created successfully",
             foodPost
@@ -48,7 +64,13 @@ export const createFoodPost = async (req, res) => {
 export const getAllFoodPosts = async (req, res) => {
     try{
         // get all food posts of food partner including food partner details
-        const foodPost = await FoodPost.find({ foodPartner : req.foodPartnerId }).populate("foodPartner", "ownerName email contactNumber restaurantName address typeofRestaurant"); ;
+        const foodPost = await FoodPost.find().populate("foodPartner", "ownerName email contactNumber restaurantName address typeofRestaurant");
+
+        if(!foodPost){
+            return res.status(404).json({
+                message : "Food posts does not exist"
+            })
+        }
 
         return res.status(200).json({
             message : "Food posts retrieved successfully",

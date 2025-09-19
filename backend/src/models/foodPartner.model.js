@@ -40,15 +40,29 @@ const FoodPartnerSchema = new mongoose.Schema({
         type : String,
     },
 
-    foodReels : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : "FoodReel"
-    },
+    // foodReels : {
+    //     type : mongoose.Schema.Types.ObjectId,
+    //     ref : "FoodReel"
+    // },
 
-    foodPosts : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : "FoodPost"
-    }
+    foodReels : [
+        {
+            type : mongoose.Schema.Types.ObjectId,
+            ref : "FoodReel"
+        }
+    ],
+
+    // foodPosts : {
+    //     type : mongoose.Schema.Types.ObjectId,
+    //     ref : "FoodPost"
+    // }
+
+    foodPosts : [
+        {
+            type : mongoose.Schema.Types.ObjectId,
+            ref : "FoodPost"
+        }
+    ],
 })
 
 

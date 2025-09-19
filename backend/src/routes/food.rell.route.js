@@ -4,13 +4,14 @@ import { authFoodPartnerMiddleware } from "../middlewares/auth.middleware.js";
 import multer from "multer";
 
 const upload = multer({
-    storage : multer.memoryStorage()
+    storage : multer.memoryStorage(),
+    limits: { fileSize: 1024 * 1024 * 1024 } 
 })
 
 const router =  express.Router();
 
-router.post("/", authFoodPartnerMiddleware, upload.single("file"), createFoodReel);
-router.get("/all", authFoodPartnerMiddleware, getAllFoodReels);
-router.get("/:id", authFoodPartnerMiddleware, getFoodReel);
+router.post("/", authFoodPartnerMiddleware, upload.single("video"), createFoodReel);
+router.get("/all", getAllFoodReels);
+router.get("/:id", getFoodReel);
 
 export default router;

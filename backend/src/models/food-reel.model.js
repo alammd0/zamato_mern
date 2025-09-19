@@ -7,8 +7,7 @@ const FoodReelSchema = new mongoose.Schema({
     },
 
     description : {
-        type : String,
-        required : true
+        type : String
     },
 
     videoUrl : {
@@ -16,20 +15,45 @@ const FoodReelSchema = new mongoose.Schema({
         required : true
     },
 
-    likes : {
-        type : mongoose.Schema.Types.ObjectId,
-        
+    tags : {
+        type : [String],
     },
 
-    comments : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : "Comment"
-    },
+    // likes : {
+    //     type : mongoose.Schema.Types.ObjectId,
+    //     ref : "Like"
+    // },
 
-    saves : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : "Save"
-    },
+    likes : [
+        {
+            type : mongoose.Schema.Types.ObjectId,
+            ref : "Like"
+        }
+    ],
+
+    // comments : {
+    //     type : mongoose.Schema.Types.ObjectId,
+    //     ref : "Comment"
+    // },
+
+    comments : [
+        {
+            type : mongoose.Schema.Types.ObjectId,
+            ref : "Comment"
+        }
+    ],
+
+    // saves : {
+    //     type : mongoose.Schema.Types.ObjectId,
+    //     ref : "Save"
+    // },
+
+    saves : [
+        {
+            type : mongoose.Schema.Types.ObjectId,
+            ref : "Save"
+        }
+    ],
 
     foodPartner : {
         type : mongoose.Schema.Types.ObjectId,
