@@ -12,7 +12,6 @@ router.get("/user/logout", logoutUser)
 router.post("/user/send-reset-password-email", sendResetPasswordEmail);
 router.put("/user/reset-password", resetPassword);
 
-// for food partner
 router.post("/foodpartner/register", registerFoodPartner);
 router.post("/foodpartner/login", loginFoodPartner);
 router.get("/foodpartner/logout", logoutFoodPartner)
