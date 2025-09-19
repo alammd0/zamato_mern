@@ -205,7 +205,7 @@ export const loginFoodPartner = async (req, res) => {
 
         // // compare password
         // const isPasswordCorrect = await bcrypt.compare(password, foodPartnerExits.password);
-        const isPasswordCorrect = await bcrypt.compare(password, foodPartnerExits.password);
+        const isPasswordCorrect = bcrypt.compare(password, foodPartnerExits.password);
 
         if(!isPasswordCorrect){
             return res.status(400).json({

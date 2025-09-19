@@ -50,6 +50,7 @@ export const authFoodPartnerMiddleware = async (req, res, next) => {
 
         // check if food partner exists
         const foodPartner = await FoodPartner.findById(decoded.userId);
+        // console.log(foodPartner);
 
         if(!foodPartner){
             return res.status(401).json({

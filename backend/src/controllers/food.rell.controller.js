@@ -1,9 +1,43 @@
-import FoodReel from "../models/food-rells.model.js";
-import User from "../models/auth.model.js";
+import FoodReel from "../models/food-reel.model.js";
+import { videoUpload } from "../config/file.upload.cloudinary.js";
 
 export const createFoodReel = async (req, res) => {
     try{
+        const { nameOfFood, description, tags } = req.body;
 
+        if(!nameOfFood){
+            return res.status(400).json({
+                message : "Please provide name of food"
+            })
+        }
+
+        let tag;
+        if(typeof tags === "string"){
+            tag = [tags];
+        }
+
+        const video = req.file;
+        console.log(video);
+        const videoUrl = await videoUpload(video);
+
+        if(!videoUrl){
+            return res.status(400).json({
+                message : "Video Url Not Provide or Invalid"
+            })
+        };
+
+        const foodReel = await FoodReel.create({
+            nameOfFood,
+            description,
+            videoUrl : videoUrl,
+            tags : tag.map(t => t.toString()),
+            foodPartner : req.foodPartnerId
+        });
+
+        return res.status(201).json({
+            message : "Food reel created successfully",
+            foodReel
+        })
     }
     catch(err){
         console.err(err);
@@ -15,7 +49,18 @@ export const createFoodReel = async (req, res) => {
 
 export const getAllFoodReels = async (req, res) => {
     try{
+        const foodReel = await FoodReel.find().populate("foodPartner", "ownerName email contactNumber restaurantName address typeofRestaurant");
 
+        if(!foodReel){
+            return res.status(404).json({
+                message : "Food reels does not exist"
+            })
+        }
+
+        return res.status(200).json({
+            message : "Food reels retrieved successfully",
+            foodReel
+        })
     }
     catch(err){
         console.error(err);
@@ -27,7 +72,20 @@ export const getAllFoodReels = async (req, res) => {
 
 export const getFoodReel = async (req, res) => {
     try{
+        const id = req.params.id; 
 
+        const foodReel = await FoodReel.findById(id).populate("foodPartner", "ownerName email contactNumber restaurantName address typeofRestaurant");
+
+        if(!foodReel){
+            return res.status(404).json({
+                message : "Food reel does not exist"
+            })
+        }
+
+        return res.status(200).json({
+            message : "Food reel retrieved successfully",
+            foodReel
+        })
     }
     catch(err){
         console.error(err);

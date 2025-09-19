@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 
 import userRoute from "./routes/user.route.js";
 import foodPostRoute from "./routes/foot.post.route.js"
+import foodReelRoute from "./routes/food.rell.route.js"
 
 
 export const app = express();
@@ -13,6 +14,7 @@ connectDb();
 
 app.use("/api/v1/auth", userRoute);
 app.use("/api/v1/food-post", foodPostRoute);
+app.use("/api/v1/food-reel", foodReelRoute);
 
 app.get("/", (req, res) => {
     res.send("Hello World");
