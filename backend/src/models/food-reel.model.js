@@ -19,10 +19,20 @@ const FoodReelSchema = new mongoose.Schema({
         type : [String],
     },
 
-    // likes : {
-    //     type : mongoose.Schema.Types.ObjectId,
-    //     ref : "Like"
-    // },
+    likeCount : {
+        type : Number,
+        default : 0
+    },
+
+    saveCount : {
+        type : Number,
+        default : 0
+    },
+
+    commentCount : {
+        type : Number,
+        default : 0
+    },
 
     likes : [
         {
@@ -31,22 +41,12 @@ const FoodReelSchema = new mongoose.Schema({
         }
     ],
 
-    // comments : {
-    //     type : mongoose.Schema.Types.ObjectId,
-    //     ref : "Comment"
-    // },
-
     comments : [
         {
             type : mongoose.Schema.Types.ObjectId,
             ref : "Comment"
         }
     ],
-
-    // saves : {
-    //     type : mongoose.Schema.Types.ObjectId,
-    //     ref : "Save"
-    // },
 
     saves : [
         {

@@ -23,7 +23,10 @@ export const authUserMiddleware = async (req, res, next) => {
             })
         }
 
-        req.userId = decoded.userId;
+        // console.log(user);
+
+        req.userId = user._id;
+        console.log(req.userId);
 
         next();
     }

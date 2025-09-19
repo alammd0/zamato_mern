@@ -12,7 +12,7 @@ export const fileUpload = async (file) => {
             file: file.buffer, 
             fileName: file.originalname,
         })
-
+        
         return result;
     }
     catch(err){
