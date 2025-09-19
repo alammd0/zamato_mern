@@ -1,5 +1,4 @@
 import cloudinary from "cloudinary";
-import streamifier from "streamifier";
 
 const cloudinaryConfig = {
     cloud_name : process.env.CLOUDINARY_CLOUD_NAME,
@@ -31,14 +30,15 @@ export const fileUpload = async(files) => {
     }
 };
 
-// for uploading video
-// export const videoUpload = async(files) => {
+
+// export const videoUpload = async (file) => {
 //     try{
-//         const base64 = `data:${files.mimetype};base64,${files.buffer.toString("base64")}`
-//         const uploadResponse = await cloudinary.uploader.upload(base64, {
+//         const uploadResponse = await cloudinary.uploader.upload(file, {
 //             folder : "zamato_mern",
 //             resource_type: "auto"
 //         })
+
+//         console.log(uploadResponse);
 //         return uploadResponse.secure_url;
 //     }
 //     catch(err){
@@ -47,44 +47,25 @@ export const fileUpload = async(files) => {
 //     }
 // }
 
+// const cloudinary = require('cloudinary').v2
 
-// helper: stream upload from a buffer
-const uploadStreamFromBuffer = (file) => {
-  return new Promise((resolve, reject) => {
+const uploadImageToCloudinary  = async (folder, file,  height, quality) => {
 
-    const uploadOptions = {
-      folder:"zamato_mern",
-      resource_type: "video",
-      timeout: 10 * 60 * 1000,
-    };
+    console.log(file);
+    console.log(file.tempFilePath);
 
-    const stream = cloudinary.uploader.upload_stream(uploadOptions, (err, result) => {
-      if (err) return reject(err);
-      resolve(result);
-    });
-
-    streamifier.createReadStream(file.buffer).pipe(stream);
-  });
-};
-
-export const videoUpload = async (file) => {
-    try{
-        if(!file || !file.buffer){
-           throw new Error("File not provided");
-        }
-
-        const sizeMB = file.size / 1024 / 1024;
-        if(sizeMB <= 90){
-            const res = await uploadStreamFromBuffer(file);
-            return res.url;
-        }
-        else{
-            const res = await uploadLargeFromBuffer(file, { folder: "zamato_mern" });
-            return res.secure_url;
-        }
+    const options = {folder};
+    if(height) {
+        options.height = height;
     }
-    catch(err){
-        console.error(err);
-        return null;
+    if(quality) {
+        options.quality = quality;
     }
+    options.resource_type = "auto";
+
+    const uploadResponse = await cloudinary.uploader.upload(file.tempFilePath, options);
+    console.log(uploadResponse);
+    return uploadResponse;
 }
+
+export default uploadImageToCloudinary;

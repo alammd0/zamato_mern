@@ -1,8 +1,9 @@
 import FoodReel from "../models/food-reel.model.js";
-import { videoUpload } from "../config/file.upload.cloudinary.js";
+import { fileUpload } from "../config/file.upload.imagekit.js";
 
 export const createFoodReel = async (req, res) => {
     try{
+
         const { nameOfFood, description, tags } = req.body;
 
         if(!nameOfFood){
@@ -11,26 +12,27 @@ export const createFoodReel = async (req, res) => {
             })
         }
 
-        let tag;
-        if(typeof tags === "string"){
-            tag = [tags];
-        }
+        // console.log(typeof tags);
 
+        // const video = req.files?.video;
         const video = req.file;
         console.log(video);
-        const videoUrl = await videoUpload(video);
 
-        if(!videoUrl){
+        if(!video){
             return res.status(400).json({
-                message : "Video Url Not Provide or Invalid"
+                message : "Please provide video"
             })
-        };
+        }
+
+        const uploadVideo = await fileUpload(video);
+        console.log(uploadVideo);
+        // const uploadVideo = await uploadImageToCloudinary("zamato_mern", video);
 
         const foodReel = await FoodReel.create({
             nameOfFood,
             description,
-            videoUrl : videoUrl,
-            tags : tag.map(t => t.toString()),
+            videoUrl : uploadVideo.url,
+            tags : tags.map(t => t.toString()),
             foodPartner : req.foodPartnerId
         });
 
@@ -40,7 +42,7 @@ export const createFoodReel = async (req, res) => {
         })
     }
     catch(err){
-        console.err(err);
+        console.error(err);
         return res.status(500).json({
             message : "Internal server error"
         });
