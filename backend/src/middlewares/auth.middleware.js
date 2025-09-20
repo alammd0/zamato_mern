@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/auth.model.js";
-import FoodPartner from "../models/foodPartner.model.js";
+import FoodPartner from "../models/food.partner.model.js";
 
 export const authUserMiddleware = async (req, res, next) => {
     const token = req.cookies.token;

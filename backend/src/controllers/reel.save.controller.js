@@ -1,11 +1,10 @@
-import FoodReel from "../models/food-reel.model.js";
-import Save from "../models/save.model.js";
+import FoodReel from "../models/reel.food.model.js";
+import Save from "../models/reel.save.model.js";
 
 export const saveFoodReel = async (req, res) => {
     try{
         const { foodReelId } = req.body;
         const userId = req.userId;
-        // console.log(userId);
 
         if(!foodReelId){
             return res.status(400).json({
