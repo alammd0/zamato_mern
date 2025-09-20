@@ -2,9 +2,9 @@ import express from "express";
 import { createFoodReel, getAllFoodReels, getFoodReel } from "../controllers/food.rell.controller.js";
 import { authFoodPartnerMiddleware, authUserMiddleware } from "../middlewares/auth.middleware.js";
 import multer from "multer";
-import { likeFoodReel } from "../controllers/like.reel.controller.js";
-import { commentFoodPost, getAllComments } from "../controllers/comment.post.controller.js";
-import { saveFoodReel } from "../controllers/save.reel.controller.js";
+import { likeFoodReel } from "../controllers/reel.like.controller.js";
+import { commentFoodReel, getAllComments } from "../controllers/reel.comment.controller.js";
+import { saveFoodReel } from "../controllers/reel.save.controller.js";
 
 const upload = multer({
     storage : multer.memoryStorage()
@@ -16,8 +16,9 @@ router.post("/", authFoodPartnerMiddleware, upload.single("video"), createFoodRe
 router.get("/all", getAllFoodReels);
 router.get("/:id", getFoodReel);
 
+
 router.post("/like", authUserMiddleware, likeFoodReel);
-router.post("/comment", authUserMiddleware, commentFoodPost);
+router.post("/comment", authUserMiddleware, commentFoodReel);
 router.get("/comments", authUserMiddleware, getAllComments);
 router.post("/save", authUserMiddleware, saveFoodReel);
 

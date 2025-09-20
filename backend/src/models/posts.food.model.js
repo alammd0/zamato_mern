@@ -28,6 +28,21 @@ const FoodPostSchema = new mongoose.Schema({
         }
     ],
 
+    lekeCount : {
+        type : Number,
+        default : 0
+    },
+
+    saveCount : {
+        type : Number,
+        default : 0
+    },
+
+    commentCount : {
+        type : Number,
+        default : 0
+    },
+
     foodPartner : {
         type : mongoose.Schema.Types.ObjectId,
         ref : "FoodPartner"

@@ -1,7 +1,7 @@
-import FoodReel from "../models/food-reel.model.js";
-import Comment from "../models/comment.model.js";
+import FoodReel from "../models/reel.food.model.js";
+import Comment from "../models/reel.comment.model.js";
 
-export const commentFoodPost = async (req, res) => {
+export const commentFoodReel = async (req, res) => {
   try {
     const { foodReelId, text } = req.body;
     // const user = req.user;

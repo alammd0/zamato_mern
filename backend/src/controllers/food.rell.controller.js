@@ -1,4 +1,4 @@
-import FoodReel from "../models/food-reel.model.js";
+import FoodReel from "../models/reel.food.model.js";
 import { fileUpload } from "../config/file.upload.imagekit.js";
 
 export const createFoodReel = async (req, res) => {

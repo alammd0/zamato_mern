@@ -1,6 +1,6 @@
 import { sendEmail } from "../config/send.nodemailer.js";
 import User from "../models/auth.model.js"
-import FoodPartner from "../models/foodPartner.model.js";
+import FoodPartner from "../models/food.partner.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { resetMessage } from "../templates/reset.message.js";

@@ -1,6 +1,6 @@
-import FoodPost from "../models/food-posts.model.js";
+import FoodPost from "../models/posts.food.model.js";
 import { fileUpload } from "../config/file.upload.cloudinary.js";
-import FoodPartner from "../models/foodPartner.model.js";
+import FoodPartner from "../models/food.partner.model.js";
 
 
 export const createFoodPost = async (req, res) => {

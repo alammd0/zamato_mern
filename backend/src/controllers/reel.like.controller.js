@@ -1,5 +1,5 @@
-import FoodReel from "../models/food-reel.model.js";
-import Like from "../models/like.model.js";
+import FoodReel from "../models/reel.food.model.js";
+import Like from "../models/reel.like.model.js";
 
 export const likeFoodReel = async (req, res) => {
     try{
