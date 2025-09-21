@@ -1,6 +1,6 @@
 import { sendEmail } from "../config/send.nodemailer.js";
 import User from "../models/auth.model.js"
-import FoodPartner from "../models/foodPartner.model.js";
+import FoodPartner from "../models/food.partner.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { resetMessage } from "../templates/reset.message.js";
@@ -9,6 +9,7 @@ import { resetMessage } from "../templates/reset.message.js";
 export const registerUser = async (req, res) => {
     try{
         const { fullname, email, password } = req.body ; 
+        console.log(fullname, email, password);
 
         if(!fullname || !email){
             return res.status(400).json({ message : "Please provide all the required fields" });
@@ -205,7 +206,7 @@ export const loginFoodPartner = async (req, res) => {
 
         // // compare password
         // const isPasswordCorrect = await bcrypt.compare(password, foodPartnerExits.password);
-        const isPasswordCorrect = await bcrypt.compare(password, foodPartnerExits.password);
+        const isPasswordCorrect = bcrypt.compare(password, foodPartnerExits.password);
 
         if(!isPasswordCorrect){
             return res.status(400).json({
@@ -216,8 +217,8 @@ export const loginFoodPartner = async (req, res) => {
         const token =  jwt.sign({ userId : foodPartnerExits._id, email : foodPartnerExits.email }, process.env.JWT_SECRET);
 
         // set token in cookie
-        res.cookie("token", token, { httpOnly : true });
-
+        res.cookie("token", token, { httpOnly : true, sameSite : "strict" });
+        
         return res.status(200).json({
             message : "Food partner logged in successfully",
             token : token,
