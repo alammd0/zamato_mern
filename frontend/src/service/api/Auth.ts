@@ -1,7 +1,10 @@
-import type { Register, RegisterFoodPartner } from "../../types";
+import type { Login, LoginFoodPartner, Register, RegisterFoodPartner } from "../../types";
 import { APIConnector } from "../APIConnector";
 
 export const registerUser = async ({fullname, email, password} : Register) => {
+
+    console.log(fullname, email, password);
+
     try {
         const response = await APIConnector("POST", "/auth/user/register", {
             fullname,
@@ -11,6 +14,7 @@ export const registerUser = async ({fullname, email, password} : Register) => {
         {
             "Content-Type" : "application/json"
         });
+
         return response;
     }
     catch(err){
@@ -19,7 +23,7 @@ export const registerUser = async ({fullname, email, password} : Register) => {
     }
 }
 
-export const loginUser = async ({email, password} : Register) => {
+export const loginUser = async ({email, password} : Login) => {
     try {
         const response = await APIConnector("POST", "/auth/user/login", {
             email,
@@ -71,7 +75,7 @@ export const registerFoodPartner = async ({ownerName, email, contactNumber, rest
     }
 }
 
-export const loginFoodPartner = async ({email, password} : RegisterFoodPartner) => {
+export const loginFoodPartner = async ({email, password} : LoginFoodPartner) => {
     try{
         const response = await APIConnector("POST", "/auth/foodpartner/login", {
             email,
