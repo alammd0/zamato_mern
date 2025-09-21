@@ -1,8 +1,9 @@
+import AppRoutes from "./routes/AppRoutes"
 
 function App() {
   return (
       <div>
-        <h1 className='bg-red-600'>Hello world</h1>
+        <AppRoutes />
       </div>
   )
 }
