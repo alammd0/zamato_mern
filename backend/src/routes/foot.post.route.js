@@ -13,7 +13,7 @@ const upload = multer({
 
 const router = express.Router();
 
-router.post("/", authFoodPartnerMiddleware, upload.array("file"), createFoodPost);
+router.post("/", authFoodPartnerMiddleware, upload.array("image"), createFoodPost);
 router.get("/all", getAllFoodPosts);
 router.get("/:id", getFoodPost);
 
