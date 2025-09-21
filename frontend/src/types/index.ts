@@ -26,7 +26,6 @@ export type LoginFoodPartner = {
     password : string
 }
 
-// food post 
 export type CreateFoodPost = {
     nameOfFood : string,
     description : string,
@@ -34,5 +33,16 @@ export type CreateFoodPost = {
     image : File
 }
 
+export type User = {
+    fullname : string,
+    email : string,
+    password : string
+}
 
-// food reel
+export interface FoodPartnerAuthFormProps {
+    type : "register" | "login"
+}
+
+export interface UserAuthFormProps {
+    type : "register" | "login"
+}

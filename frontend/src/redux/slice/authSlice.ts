@@ -7,6 +7,18 @@ export interface AuthState {
         email : string,
         fullname : string
     },
+
+    foodPartner : {
+        _id : string,
+        ownerName : string,
+        email : string,
+        contactNumber : number,
+        restaurantName : string,
+        profileImage : string,
+        address : string,
+        typeofRestaurant : string
+    },
+
     token : string
 }
 
@@ -16,6 +28,16 @@ const initialState: AuthState = {
         email : "",
         fullname : "",
     },
+    foodPartner : {
+        _id : "",
+        ownerName : "",
+        email : "",
+        contactNumber : 0,
+        restaurantName : "",
+        profileImage : "",
+        address : "",
+        typeofRestaurant : ""
+    },
     token : ""
 }
 
@@ -23,19 +45,45 @@ export const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers : {
-        registerUser : (state, action : PayloadAction<AuthState>) => {
+        setRegisterUser : (state, action : PayloadAction<AuthState>) => {
             state.user = action.payload.user;
         },
 
-        loginUser : (state, action : PayloadAction<AuthState>) => {
+        setLoginUser : (state, action : PayloadAction<AuthState>) => {
             state.user = action.payload.user;
         },
 
-        setToken : (state, action : PayloadAction<string>) => {
+        setUserToken : (state, action : PayloadAction<string>) => {
             state.token = action.payload;
         },
 
-        logoutUser : (state) => {
+        setRegisterFoodPartner : (state, action : PayloadAction<AuthState>) => {
+            state.foodPartner = action.payload.foodPartner;
+        },
+
+        setLoginFoodPartner : (state, action : PayloadAction<AuthState>) => {
+            state.foodPartner = action.payload.foodPartner;
+        },
+
+        setFoodPartnerToken : (state, action : PayloadAction<string>) => {
+            state.token = action.payload;
+        },
+
+        setLogoutFoodPartner : (state) => {
+            state.foodPartner = {
+                _id : "",
+                ownerName : "",
+                email : "",
+                contactNumber : 0,
+                restaurantName : "",
+                profileImage : "",
+                address : "",
+                typeofRestaurant : ""
+            }
+            state.token = "";
+        },
+
+        setLogoutUser : (state) => {
             state.user = {
                 _id : "",
                 email : "",
@@ -46,5 +94,5 @@ export const authSlice = createSlice({
     }
 });
 
-export const { registerUser, loginUser, setToken,logoutUser } = authSlice.actions;
+export const { setRegisterUser, setLoginUser, setUserToken, setLogoutUser, setRegisterFoodPartner, setLoginFoodPartner, setFoodPartnerToken, setLogoutFoodPartner } = authSlice.actions;
 export default authSlice.reducer;

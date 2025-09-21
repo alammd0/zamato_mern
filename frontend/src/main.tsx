@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom'
 import "@radix-ui/themes/styles.css";
 import { Theme } from "@radix-ui/themes";
 import './index.css'
+import { Toaster } from "react-hot-toast";
 
 
 createRoot(document.getElementById('root')!).render(
@@ -15,6 +16,10 @@ createRoot(document.getElementById('root')!).render(
       <Theme>
          <BrowserRouter>
           <App />
+          <Toaster
+            position="top-right"
+            reverseOrder={false}
+          />
         </BrowserRouter>
       </Theme>
     </Provider>
