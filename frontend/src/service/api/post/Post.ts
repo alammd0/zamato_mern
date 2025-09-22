@@ -1,15 +1,8 @@
-import type { CreateFoodPost } from "../../../types";
 import { APIConnector } from "../../APIConnector";
 
 
-export const createFoodPost = async ({nameOfFood, description, tags, image} : CreateFoodPost) => {
+export const createFoodPost = async ({formData} : {formData : FormData}) => {
     try{
-        const formData = new FormData();
-        formData.append("nameOfFood", nameOfFood);
-        formData.append("description", description);
-        formData.append("tags", tags.join(","));
-        formData.append("image", image);
-
         const response = await APIConnector("POST", "/food-post", formData, 
         {
             "Content-Type" : "multipart/form-data"

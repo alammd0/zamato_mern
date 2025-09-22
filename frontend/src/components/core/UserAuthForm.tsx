@@ -4,7 +4,7 @@ import type { SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser, registerUser } from "../../service/api/Auth";
 import { useDispatch } from "react-redux";
-import { setLoginUser, setRegisterUser, setUserToken } from "../../redux/slice/authSlice";
+import { setLoginUser, setRegisterUser, setUserToken } from "../../redux/slice/userAuthSlice";
 import toast from "react-hot-toast";
 
 export default function UserAuthForm({ type } : UserAuthFormProps){
@@ -30,7 +30,7 @@ export default function UserAuthForm({ type } : UserAuthFormProps){
                 dispatch(setRegisterUser(response.user));
                 dispatch(setUserToken(response.token));
                 toast.success(response.message);
-                navigate("/home")
+                navigate("/user/dashboard")
             }
         }
         else{
@@ -42,7 +42,7 @@ export default function UserAuthForm({ type } : UserAuthFormProps){
             }else{
                 dispatch(setLoginUser(response.user));
                 dispatch(setUserToken(response.token));
-                navigate("/home");
+                navigate("/user/dashboard");
                 toast.success(response.message);
             }
         }

@@ -46,3 +46,37 @@ export interface FoodPartnerAuthFormProps {
 export interface UserAuthFormProps {
     type : "register" | "login"
 }
+
+export type FoodPost = {
+    nameOfFood : string,
+    description : string,
+    tags : string[],
+    image : File[]
+}
+
+export type FoodReel = {
+    nameOfFood : string,
+    description : string,
+    tags : string[],
+    image : File
+}
+
+export type FoodPosts = {
+    nameOfFood : string,
+    description : string,
+    tags : string[],
+    image : File,
+    likes : number,
+    comments : number,
+    save : number
+}
+
+export type FoodReels = {
+    nameOfFood : string,
+    description : string,
+    tags : string[],
+    image : File,
+    likes : number,
+    comments : number,
+    save : number
+}

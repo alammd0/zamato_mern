@@ -6,8 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { loginFoodPartner, registerFoodPartner } from "../../service/api/Auth";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
-import { setFoodPartnerToken, setLoginFoodPartner, setRegisterFoodPartner } from "../../redux/slice/authSlice";
-
+import { setFoodPartnerToken, setLoginFoodPartner, setRegisterFoodPartner } from "../../redux/slice/foodPartnerSlice";
 
 export default function FoodPartnerAuthForm({ type } : FoodPartnerAuthFormProps) {
 
@@ -29,10 +28,10 @@ export default function FoodPartnerAuthForm({ type } : FoodPartnerAuthFormProps)
                 navigate("/food-partner/register");
                 toast.error(response.message);
             }else{
-                dispatch(setRegisterFoodPartner(response.foodPartner));
+                dispatch(setRegisterFoodPartner(response));
                 dispatch(setFoodPartnerToken(response.token));
                 toast.success(response.message);
-                navigate("/home")
+                navigate("/food-partner/dashboard")
             }
         }
         else{
@@ -41,9 +40,9 @@ export default function FoodPartnerAuthForm({ type } : FoodPartnerAuthFormProps)
             if(response.message !== "Food partner logged in successfully"){
                 navigate("/food-partner/login");
             }else{
-                dispatch(setLoginFoodPartner(response.foodPartner));
+                dispatch(setLoginFoodPartner(response));
                 dispatch(setFoodPartnerToken(response.token));
-                navigate("/home")
+                navigate("/food-partner/dashboard")
             }
         }
     }
