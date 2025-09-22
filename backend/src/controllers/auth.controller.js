@@ -196,7 +196,7 @@ export const loginFoodPartner = async (req, res) => {
         // check if food partner exists
         const foodPartnerExits = await FoodPartner.findOne({
             email
-        });
+        }).select("-password");
 
         if(!foodPartnerExits){
             return res.status(400).json({
