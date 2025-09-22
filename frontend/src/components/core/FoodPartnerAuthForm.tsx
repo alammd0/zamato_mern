@@ -8,7 +8,6 @@ import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { setFoodPartnerToken, setLoginFoodPartner, setRegisterFoodPartner } from "../../redux/slice/foodPartnerSlice";
 
-
 export default function FoodPartnerAuthForm({ type } : FoodPartnerAuthFormProps) {
 
     const dispatch = useDispatch();
