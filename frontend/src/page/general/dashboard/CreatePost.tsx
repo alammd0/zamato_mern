@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import type { SubmitHandler } from "react-hook-form";
 import type { FoodPost } from "../../../types";
 import { X } from "lucide-react";
-import { createFoodPost } from "../../../service/api/post/Post";
 
 export default function CreatePost() {
     
