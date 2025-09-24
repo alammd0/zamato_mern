@@ -4,9 +4,6 @@ export const likeFoodPost = async ( foodPostId : string) => {
     try{
         const response = await APIConnector("POST", `/food-post/like`, {
             foodPostId
-        } , 
-        {
-            "Content-Type" : "application/json"
         });
 
         return response;
@@ -23,9 +20,6 @@ export const commentFoodPost = async (foodPostId : string, comment : string) => 
         const response = await APIConnector("POST", `/food-post/comment`, {
             foodPostId,
             comment
-        } , 
-        {
-            "Content-Type" : "application/json"
         });
         return response;
     }
@@ -39,9 +33,6 @@ export const getAllComments = async (foodPostId : string) => {
     try{
         const response = await APIConnector("GET", `/food-post/comments`, {
             foodPostId
-        } , 
-        {
-            "Content-Type" : "application/json"
         });
         return response;
     }
@@ -55,9 +46,6 @@ export const saveFoodPost = async (foodPostId : string) => {
     try{
         const response = await APIConnector("POST", `/food-post/save`, {
             foodPostId
-        } , 
-        {
-            "Content-Type" : "application/json"
         });
         return response;
     }

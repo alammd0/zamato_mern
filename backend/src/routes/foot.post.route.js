@@ -1,3 +1,5 @@
+
+
 import express from "express";
 import { authFoodPartnerMiddleware, authUserMiddleware } from "../middlewares/auth.middleware.js";
 import { createFoodPost, getAllFoodPosts, getFoodPost } from "../controllers/food.post.controller.js";
@@ -13,7 +15,7 @@ const upload = multer({
 
 const router = express.Router();
 
-router.post("/", authFoodPartnerMiddleware, upload.array("image"), createFoodPost);
+router.post("/", authFoodPartnerMiddleware, upload.array("images"), createFoodPost);
 router.get("/all", getAllFoodPosts);
 router.get("/:id", getFoodPost);
 

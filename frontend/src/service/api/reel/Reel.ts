@@ -1,17 +1,14 @@
 import { APIConnector } from "../../APIConnector";
 
-export const createFoodReel = async (nameOfFood : string, description : string, tags : string[], image : File) => {
+export const createFoodReel = async (nameOfFood : string, description : string, tags : string[], video : File) => {
     try{
         const formData = new FormData();
         formData.append("nameOfFood", nameOfFood);
         formData.append("description", description);
-        formData.append("tags", tags.join(","));
-        formData.append("image", image);
+        tags.forEach(tag => formData.append("tags[]", tag));
+        formData.append("video", video);
 
-        const response = await APIConnector("POST", "/food-reel", formData, 
-        {
-            "Content-Type" : "multipart/form-data"
-        });
+        const response = await APIConnector("POST", "/food-reel", formData);
 
         return response;
     }
@@ -23,10 +20,7 @@ export const createFoodReel = async (nameOfFood : string, description : string, 
 
 export const getAllFoodReels = async () => {
     try{
-        const response = await APIConnector("GET", "/food-reel/all", null, 
-        {
-            "Content-Type" : "application/json"
-        });
+        const response = await APIConnector("GET", "/food-reel/all", null);
         return response;
     }
     catch(err){
@@ -37,10 +31,7 @@ export const getAllFoodReels = async () => {
 
 export const getFoodReel = async (id : string) => {
     try{
-        const response = await APIConnector("GET", `/food-reel/${id}`, null, 
-        {
-            "Content-Type" : "application/json"
-        });
+        const response = await APIConnector("GET", `/food-reel/${id}`, null);
         return response;
     }
     catch(err){

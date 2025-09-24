@@ -1,164 +1,141 @@
-import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import type { SubmitHandler } from "react-hook-form";
-import type { FoodPost } from "../../../types";
-import { X } from "lucide-react";
+import { useState } from "react"
+import type { FoodPost } from "../../../types"
+import { createFoodPost } from "../../../service/api/post/Post";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function CreatePost() {
-    
-    const { register, handleSubmit, reset, setValue } = useForm<FoodPost>();
-    const [tags, setTags] = useState<string[]>([]);
-    const [tagInput, setTagInput] = useState("");
 
-    const [files, setFiles] = useState<File[]>([]);
-    const [previewImages, setPreviewImages] = useState<string[]>([]);
-    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const [post, setPost] = useState<FoodPost>({
+        nameOfFood : "",
+        description : "",
+        tags : [],
+        images : []
+    })
+    const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+    const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
 
-    const syncFormFiles = (newFiles: File[]) => {
-        setValue("image", newFiles);
-    };
+    const handleFileChange = (e : React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if(files){
+            const newFiles = Array.from(files);
+            setPost( (prev) => ({
+                ...prev,
+                images: [...prev.images, ...newFiles]
+            }));
 
-
-    const onSubmit: SubmitHandler<FoodPost> = async (data) => {
-        const formData = new FormData();
-        formData.append("nameOfFood", data.nameOfFood || "");
-        formData.append("description", data.description || "");
-        tags.forEach((t) => formData.append("tags[]", t));
-        files.forEach((file) => formData.append("images", file));
-        
-        // console.log({ nameOfFood: data.nameOfFood, description: data.description, tags, files });
-
-        // const response = await createFoodPost(formData);
-
-        reset();
-        setTags([]);
-        previewImages.forEach((url) => URL.revokeObjectURL(url));
-        setPreviewImages([]);
-        setFiles([]);
-        if (fileInputRef.current) fileInputRef.current.value = "";
-    };
-
-    const handleAddTag = () => {
-        if (tagInput.trim() !== "") {
-        setTags((prev) => [...prev, tagInput.trim()]);
-        setTagInput("");
+            const newPreviews = newFiles.map(file => URL.createObjectURL(file));
+            setImagePreviews(prev => [...prev, ...newPreviews]);
         }
-    };
-
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.files) return;
-        const newFiles = Array.from(e.target.files);
-        const newUrls = newFiles.map((f) => URL.createObjectURL(f));
-
-        setFiles((prev) => {
-            const merged = [...prev, ...newFiles];
-            syncFormFiles(merged);
-            return merged;
-        });
-
-        setPreviewImages((prev) => {
-            const merged = [...prev, ...newUrls];
-            return merged;
-        });
-
-        if (fileInputRef.current) fileInputRef.current.value = "";
-    };
+    }
 
     const handleRemoveImage = (index: number) => {
-        setFiles((prevFiles) => {
-            const newFiles = prevFiles.filter((_, i) => i !== index);
-            syncFormFiles(newFiles);
-            return newFiles;
-        });
-
-        setPreviewImages((prev) => {
-            const removed = prev[index];
-            if (removed) URL.revokeObjectURL(removed);
-            return prev.filter((_, i) => i !== index);
-        });
+        setPost(prev => ({
+            ...prev,
+            images: prev.images.filter((_, i) => i !== index)
+        }));
+        setImagePreviews(prev => prev.filter((_, i) => i !== index));
     };
 
-    useEffect(() => {
-        return () => {
-            previewImages.forEach((url) => URL.revokeObjectURL(url));
-        };
-    }, []);
+    const handleTagChange = (e : React.ChangeEvent<HTMLInputElement>) => {
+        const tags = e.target.value.split(",").map(t => t.trim());
+        setPost( (prev) => ({
+            ...prev,
+            tags
+        }));
+    }
 
-  return (
-    <div className="flex items-center justify-center px-6 py-10 min-h-screen bg-card border border-border rounded-lg shadow shadow-accent">
-        <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg border-border">
+    const handleChange = (e : React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setPost( (prev) => ({
+            ...prev,
+            [e.target.name] : e.target.value
+        }));
+    }
 
-            <h2 className="text-2xl font-bold mb-4 text-center">Create Food Post</h2>
+    const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
-            <input
-                {...register("nameOfFood", { required: true })}
-                type="text"
-                placeholder="Name of Food"
-                className="w-full border p-2 rounded mb-3"
-            />
+        const formData = new FormData();
+        formData.append("nameOfFood", post.nameOfFood);
+        formData.append("description", post.description);
+        post.tags.forEach(tag => formData.append("tags[]", tag));
+        post.images.forEach(file => formData.append("images", file));
 
-            <textarea
-                {...register("description")}
-                placeholder="Description"
-                className="w-full border p-2 rounded mb-3"
-            />
+        try{
+            setIsLoading(true);
+            const response = await createFoodPost(formData);
 
-            <input
-                {...register("image" as any)}
-                ref={(e) => {
-                    register("image").ref(e);
-                    fileInputRef.current = e;
-                }}
-                type="file"
-                multiple
-                onChange={handleImageChange}
-                accept="image/*"
-                className="mb-3"
-            />
+            if(response.message !== "Food post created successfully"){
+                toast.error(response.message);
+                setIsLoading(false);
+                return;
+            }
 
-            {previewImages.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-3">
-                {previewImages.map((url, idx) => (
-                    <div key={idx} className="relative">
-                        <img src={url} alt={`preview-${idx}`} className="w-20 h-20 object-cover rounded" />
-                            <button
-                            type="button"
-                            onClick={() => handleRemoveImage(idx)}
-                            className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center"
-                            aria-label={`Remove image ${idx + 1}`}
-                            >
-                                <X />
-                            </button>
+            toast.success(response.message);
+            navigate("/food-partner/dashboard");
+            setIsLoading(false);
+        }
+        catch(err){
+            console.error(err);
+            toast.error("Failed to create post");
+            setIsLoading(false);
+        }
+    }
+
+    if(isLoading){
+        return <div className="flex items-center justify-center min-h-screen bg-background">
+                <div className="flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary"></div>
+                </div>
+        </div>
+    }
+
+    return (
+        <div className="flex items-center justify-center min-h-screen bg-background">
+            <div className="bg-card text-card-foreground p-6 rounded-lg shadow-md max-w-2xl w-full">
+                <header className="text-center mb-2">
+                    <h1 className="text-3xl font-bold text-primary">Create a New Food Post</h1>
+                </header>
+
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="nameOfFood" className="text-sm font-medium text-muted-foreground">Name of Food</label>
+                        <input type="text" id="nameOfFood" name="nameOfFood" value={post.nameOfFood} onChange={handleChange} className="bg-input border outline-none border-border rounded-md p-2 text-foreground focus:ring-1 focus:ring-ring" />
                     </div>
-                ))}
-            </div>
-            )}
 
-            <div className="flex items-center gap-2 mb-3">
-                <input
-                    type="text"
-                    placeholder="Add a tag"
-                    value={tagInput}
-                    onChange={(e) => setTagInput(e.target.value)}
-                    className="flex-1 border p-2 rounded"
-                />
-                <button type="button" onClick={handleAddTag} className="bg-blue-500 text-white px-3 py-1 rounded">
-                    Add
-                </button>
-            </div>
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="description" className="text-sm font-medium text-muted-foreground">Description</label>
+                        <textarea id="description" name="description" value={post.description} onChange={handleChange} className="bg-input border border-border rounded-md p-2 text-foreground outline-none focus:ring-1 focus:ring-ring" />
+                    </div>
 
-            <div className="flex flex-wrap gap-2 mb-4">
-                {tags.map((tag, idx) => (
-                    <span key={idx} className="bg-gray-200 px-2 py-1 rounded text-sm">
-                    {tag}
-                    </span>
-                ))}
-            </div>
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="tags" className="text-sm font-medium text-muted-foreground">Tags (comma-separated)</label>
+                        <input type="text" id="tags" name="tags" value={post.tags.join(", ")} onChange={handleTagChange} className="bg-input border border-border rounded-md p-2 text-foreground outline-none focus:ring-1 focus:ring-ring" />
+                    </div>
 
-            <button type="submit" className="w-full bg-green-500 text-white py-2 rounded">
-                Create Post
-            </button>
-        </form>
-    </div>
-  );
+                    <div className="flex flex-col gap-2">
+                        <label htmlFor="images" className="text-sm font-medium text-muted-foreground">Images</label>
+                        <input type="file" id="images" name="images" multiple onChange={handleFileChange} className="bg-input border border-border rounded-md p-2 text-foreground focus:ring-1 focus:ring-ring" />
+                        <div className="flex flex-wrap gap-4 mt-4">
+                            {imagePreviews.map((src, index) => (
+                                <div key={index} className="relative">
+                                    <img src={src} alt={`Preview ${index + 1}`} className="w-24 h-24 object-cover rounded-md border-2 border-border" />
+                                    <button
+                                        type="button"
+                                        onClick={() => handleRemoveImage(index)}
+                                        className="absolute top-0 right-0 bg-destructive text-destructive-foreground rounded-full p-1 text-xs leading-none"
+                                    >
+                                        &times;
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <button type="submit" className="bg-primary text-primary-foreground rounded-md py-2 px-4 font-semibold hover:bg-primary/90">Create Post</button>
+                </form>
+            </div>
+        </div>
+    )
 }

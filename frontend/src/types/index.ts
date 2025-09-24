@@ -26,13 +26,6 @@ export type LoginFoodPartner = {
     password : string
 }
 
-export type CreateFoodPost = {
-    nameOfFood : string,
-    description : string,
-    tags : string[],
-    image : File
-}
-
 export type User = {
     fullname : string,
     email : string,
@@ -51,21 +44,21 @@ export type FoodPost = {
     nameOfFood : string,
     description : string,
     tags : string[],
-    image : File[]
+    images : File[],
 }
 
 export type FoodReel = {
     nameOfFood : string,
     description : string,
     tags : string[],
-    image : File
+    video : File | null
 }
 
 export type FoodPosts = {
     nameOfFood : string,
     description : string,
     tags : string[],
-    image : File,
+    imageUrl : string,
     likes : number,
     comments : number,
     save : number
@@ -75,7 +68,7 @@ export type FoodReels = {
     nameOfFood : string,
     description : string,
     tags : string[],
-    image : File,
+    videoUrl : string,
     likes : number,
     comments : number,
     save : number
