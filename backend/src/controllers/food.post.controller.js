@@ -8,21 +8,16 @@ export const createFoodPost = async (req, res) => {
 
         const { nameOfFood, description, tags } = req.body;
 
+        console.log(tags);
+
         if(!nameOfFood){
             return res.status(400).json({
                 message : "Please provide name of food"
             })
         }
 
-        // console.log(typeof tags);
-
-        let tag;
-        // covert tags to array
-        if(typeof tags === "string"){
-            tag = [tags];
-        }
-
         const files = req.files;
+        // console.log(files);
         if(files.length === 0){
             return res.status(400).json({
                 message : "Please provide image"
@@ -35,7 +30,7 @@ export const createFoodPost = async (req, res) => {
             nameOfFood,
             description,
             imageUrl : uploadResponse,
-            tags : tag.map(t => t.toString()),
+            tags : tags.map(t => t.toString()),
             foodPartner : req.foodPartnerId
         })
 

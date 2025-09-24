@@ -24,6 +24,7 @@ export default function FoodPartnerAuthForm({ type } : FoodPartnerAuthFormProps)
             const {ownerName, email, contactNumber, restaurantName, address, typeofRestaurant, password} = data;
             const response = await registerFoodPartner({ownerName, email, contactNumber, restaurantName, address, typeofRestaurant, password});
 
+
             if(response.message !== "Food partner registered successfully"){
                 navigate("/food-partner/register");
                 toast.error(response.message);
@@ -37,6 +38,7 @@ export default function FoodPartnerAuthForm({ type } : FoodPartnerAuthFormProps)
         else{
             const {email, password} = data;
             const response = await loginFoodPartner({email, password});
+            // console.log(response.foodPartner);
             if(response.message !== "Food partner logged in successfully"){
                 navigate("/food-partner/login");
             }else{

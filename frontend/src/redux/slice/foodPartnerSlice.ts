@@ -2,50 +2,46 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { FoodPosts, FoodReels } from "../../types";
 
-export interface FoodPartner {
-    _id : string,
-    ownerName : string,
-    email : string,
-    contactNumber : number,
-    restaurantName : string,
-    profileImage : string,
-    address : string,
-    typeofRestaurant : string,
-    foodReels : Array<FoodReels>,
-    foodPosts : Array<FoodPosts>
-}
-
 export interface FoodPartnerState {
-    foodPartner : FoodPartner,
+    foodPartner : {
+        _id : string,
+        ownerName : string,
+        email : string,
+        contactNumber : number,
+        restaurantName : string,
+        address : string,
+        typeofRestaurant : string,
+        foodReels : FoodReels[],
+        foodPosts : FoodPosts[]
+    },
     token : string
 }
 
 const initialState: FoodPartnerState = {
-  foodPartner: {
-    _id: "",
-    ownerName: "",
-    email: "",
-    contactNumber: 0,
-    restaurantName: "",
-    profileImage: "",
-    address: "",
-    typeofRestaurant: "",
-    foodReels: [],
-    foodPosts: [],
-  },
-  token: "",
-};
+    foodPartner : {
+        _id : "",
+        ownerName : "",
+        email : "",
+        contactNumber : 0,
+        restaurantName : "",
+        address : "",
+        typeofRestaurant : "",
+        foodReels : [],
+        foodPosts : []
+    },
+    token : ""
+}
 
 export const FoodPartnerSlice = createSlice({
     name: "foodPartner",
     initialState,
     reducers : {
-        setRegisterFoodPartner : (state, action : PayloadAction<FoodPartner>) => {
-            state.foodPartner = action.payload;
+        setRegisterFoodPartner : (state, action : PayloadAction<FoodPartnerState>) => {
+            state.foodPartner = action.payload.foodPartner;
         },
 
-        setLoginFoodPartner : (state, action : PayloadAction<FoodPartner>) => {
-            state.foodPartner = action.payload;
+        setLoginFoodPartner : (state, action : PayloadAction<FoodPartnerState>) => {
+            state.foodPartner = action.payload.foodPartner;
         },
 
         setFoodPartnerToken : (state, action : PayloadAction<string>) => {
@@ -59,14 +55,13 @@ export const FoodPartnerSlice = createSlice({
                 email : "",
                 contactNumber : 0,
                 restaurantName : "",
-                profileImage : "",
                 address : "",
                 typeofRestaurant : "",
                 foodReels : [],
                 foodPosts : []
             }
             state.token = "";
-        },
+        }
     }
 });
 

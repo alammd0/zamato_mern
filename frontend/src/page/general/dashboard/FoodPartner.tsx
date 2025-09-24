@@ -5,15 +5,20 @@ import type { RootState } from "../../../redux/store"
 import { setLogoutFoodPartner } from "../../../redux/slice/foodPartnerSlice"
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import type { FoodPosts, FoodReels } from "../../../types"
+import { useEffect, useState } from "react"
+import { getAllFoodPosts } from "../../../service/api/post/Post"
+import { getAllFoodReels } from "../../../service/api/reel/Reel"
+
 
 export default function FoodPartnerLandingPage() {
 
-    const foodPartner = useSelector( (state : RootState) => state.foodPartner.foodPartner);
-
-    console.log(foodPartner);
+    const foodPartner = useSelector( (state : RootState) => state.foodPartner);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [postData, setPostData] = useState<FoodPosts[]>([]);
+    const [reelData, setReelData] = useState<FoodReels[]>([]);
 
 
     const FoodPartnerLogout = () => {
@@ -22,6 +27,45 @@ export default function FoodPartnerLandingPage() {
         navigate("/food-partner/login");
         toast.success("You have been logged out successfully");
     }
+
+    useEffect ( () => {
+        const getAlPostsData = async () => {
+          try{
+            const response = await getAllFoodPosts();
+            if(response.message !== "Food posts retrieved successfully"){
+              toast.error(response.message);
+              return;
+            }
+            setPostData(response.foodPost);
+          }
+          catch(err){
+            console.error(err);
+          }
+        };
+
+        getAlPostsData();
+    }, []);
+
+    useEffect( () => {
+        const getAlReelsData = async () => {
+          try{
+            const response = await getAllFoodReels();
+            if(response.message !== "Food reels retrieved successfully"){
+              toast.error(response.message);
+              return;
+            }
+            setReelData(response.foodReel);
+          }
+          catch(err){
+            console.error(err);
+          }
+        };
+
+        getAlReelsData();
+    }, [])
+
+    const images = postData.map(post => post.imageUrl);
+    console.log(reelData);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted">
@@ -32,7 +76,7 @@ export default function FoodPartnerLandingPage() {
             <Store className="h-8 w-8 text-primary" />
             <div>
               <h1 className="text-xl font-serif font-semibold">FoodReel Partner</h1>
-              <p className="text-sm text-muted-foreground">Welcome {foodPartner.ownerName}</p>
+              <p className="text-sm text-muted-foreground">Welcome {foodPartner.foodPartner.ownerName}</p>
             </div>
           </div>
           <Button onClick={FoodPartnerLogout} variant="outline" className="flex items-center gap-2 bg-transparent">
@@ -61,12 +105,12 @@ export default function FoodPartnerLandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card>
             <div className="p-6">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center gap-3">
                 <div className="p-2 bg-primary/10 rounded-lg">
                   <Users className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-xl font-bold">{foodPartner.restaurantName}</p>
+                  <p className="text-xl font-bold">{foodPartner.foodPartner.ownerName}</p>
                 </div>
               </div>
             </div>
@@ -74,12 +118,12 @@ export default function FoodPartnerLandingPage() {
 
           <Card>
             <div className="p-6">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center gap-3">
                 <div className="p-2 bg-primary/10 rounded-lg">
                   <VideoIcon className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{foodPartner?.foodReels?.length ?? 0}</p>
+                  <p className="text-2xl font-bold">{reelData.length}</p>
                   <p className="text-sm text-muted-foreground">Reels</p>
                 </div>
               </div>
@@ -88,12 +132,12 @@ export default function FoodPartnerLandingPage() {
 
           <Card>
             <div className="p-6">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center gap-3">
                 <div className="p-2 bg-primary/10 rounded-lg">
                   <Camera className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{foodPartner?.foodPosts?.length ?? 0}</p>
+                  <p className="text-2xl font-bold">{postData.length}</p>
                   <p className="text-sm text-muted-foreground">Posts</p>
                 </div>
               </div>
@@ -102,7 +146,7 @@ export default function FoodPartnerLandingPage() {
 
           <Card>
             <div className="p-6">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center gap-3">
                 <div className="p-2 bg-primary/10 rounded-lg">
                   <Star className="h-5 w-5 text-primary" />
                 </div>
@@ -142,11 +186,21 @@ export default function FoodPartnerLandingPage() {
 
                     <div className="mt-6 px-4 flex flex-col gap-4">
                         <Tabs.Content value="reels">
-                            hello reels
+                            <div className="grid grid-cols-3 gap-1 md:grid-cols-2">
+                              {reelData.map((reel, index) => (
+                                <video key={index} src={reel.videoUrl} autoPlay loop muted className=" h-[500px] w-[350px] object-cover rounded-md border-1 border-border cursor-pointer hover:border-primary hover:shadow-md transition-all duration-300">
+                                  Your browser does not support the video tag.
+                                </video>
+                              ))}
+                            </div>
                         </Tabs.Content>
 
                         <Tabs.Content value="posts">
-                            hello posts
+                            <div className="grid grid-cols-3 gap-1 md:grid-cols-2">
+                              {images.map((image, index) => (
+                                  <img key={index} src={image[0]} alt={`Preview ${index + 1}`} className=" h-[400px] w-full object-cover rounded-md border-1 border-border cursor-pointer hover:border-primary hover:shadow-md transition-all duration-300" />
+                              ))}
+                            </div>
                         </Tabs.Content>
                     </div>
                 </Tabs.Root>

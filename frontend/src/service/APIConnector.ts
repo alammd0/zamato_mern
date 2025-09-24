@@ -7,17 +7,14 @@ const apiClient = axios.create({
     timeout : 10000
 });
 
-export const APIConnector = async (method : string, url : string, data : object | null, headers : Record<string, string>) => {
-
-    console.log(method, url, data, headers);
-
+export const APIConnector = async (method : string, url : string, data : object | null) => {
     try{
 
         const response = await apiClient({
             method,
             url,
             data,
-            headers
+            withCredentials : true,
         })
 
         return response.data;

@@ -11,10 +11,7 @@ export const createFoodReel = async (req, res) => {
                 message : "Please provide name of food"
             })
         }
-
-        // console.log(typeof tags);
-
-        // const video = req.files?.video;
+        
         const video = req.file;
         console.log(video);
 

@@ -1,14 +1,19 @@
+import axios from "axios";
 import { APIConnector } from "../../APIConnector";
 
 
-export const createFoodPost = async ({formData} : {formData : FormData}) => {
+export const createFoodPost = async (postData : FormData) => {
     try{
-        const response = await APIConnector("POST", "/food-post", formData, 
-        {
-            "Content-Type" : "multipart/form-data"
-        });
-
-        return response;
+        const response = await axios.post("http://localhost:3000/api/v1/food-post", postData,
+            {
+                headers : {
+                    "Content-Type" : "multipart/form-data"
+                },
+                
+                withCredentials : true
+            }
+        );
+        return response.data;
     }
     catch(err){
         console.error(err);
@@ -18,10 +23,7 @@ export const createFoodPost = async ({formData} : {formData : FormData}) => {
 
 export const getAllFoodPosts = async () => {
     try{
-        const response = await APIConnector("GET", "/food-post/all", null, 
-        {
-            "Content-Type" : "application/json"
-        });
+        const response = await APIConnector("GET", "/food-post/all", null);
         return response;
     }
     catch(err){
@@ -32,10 +34,7 @@ export const getAllFoodPosts = async () => {
 
 export const getFoodPost = async (id : string) => {
     try{
-        const response = await APIConnector("GET", `/food-post/${id}`, null, 
-        {
-            "Content-Type" : "application/json"
-        });
+        const response = await APIConnector("GET", `/food-post/${id}`, null);
         return response;
     }
     catch(err){
