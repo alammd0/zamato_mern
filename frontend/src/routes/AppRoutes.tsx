@@ -7,7 +7,7 @@ import UserLogin from "../page/auth/user/UserLogin";
 import FoodPartnerSignup from "../page/auth/foodPartner/FoodPartnerSignup";
 import FoodPartnerLogin from "../page/auth/foodPartner/FoodPartnerLogin";
 import FoodPartnerLandingPage from "../page/general/dashboard/FoodPartner";
-import UserLandingPage from "../page/general/dashboard/User";
+import UserLandingPage from "../page/general/User/User";
 import CreateReel from "../page/general/dashboard/CreateReel";
 import CreatePost from "../page/general/dashboard/CreatePost";
 

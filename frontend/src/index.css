@@ -123,3 +123,25 @@
     @apply bg-background text-foreground;
   }
 }
+
+.custom-btn {
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background-color:oklch(0.95 0.01 85);
+  color: black;
+  transition: background-color 0.2s ease;
+}
+
+.active-btn{
+  background-color: oklch(0.40 0.08 40);
+  color: white;
+}
+
+.custom-btn:hover {
+  background-color: oklch(0.45 0.09 40);
+}
