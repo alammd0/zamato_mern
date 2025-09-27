@@ -10,7 +10,6 @@ import { useEffect, useState } from "react"
 import { getAllFoodPosts } from "../../../service/api/post/Post"
 import { getAllFoodReels } from "../../../service/api/reel/Reel"
 
-
 export default function FoodPartnerLandingPage() {
 
     const foodPartner = useSelector( (state : RootState) => state.foodPartner);
