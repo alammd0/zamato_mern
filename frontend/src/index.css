@@ -124,6 +124,18 @@
   }
 }
 
+.footer-custom-btn{
+  cursor: pointer;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background-color:oklch(0.95 0.01 85);
+  color: black;
+  transition: background-color 0.2s ease;
+}
+
 .custom-btn {
   cursor: pointer;
   width: 100%;
@@ -144,4 +156,13 @@
 
 .custom-btn:hover {
   background-color: oklch(0.45 0.09 40);
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

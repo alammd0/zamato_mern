@@ -1,4 +1,3 @@
-
 export type Register = {
     fullname : string,
     email : string,
@@ -58,18 +57,31 @@ export type FoodPosts = {
     nameOfFood : string,
     description : string,
     tags : string[],
-    imageUrl : string,
+    imageUrl : string[],
     likes : number,
     comments : number,
-    save : number
+    save : number,
+    foodPartner : foodPartner
+}
+
+export type foodPartner = {
+    address : string,
+    contactNumber : number,
+    email : string,
+    ownerName : string,
+    restaurantName : string,
+    typeofRestaurant : string,
+    _id : string
 }
 
 export type FoodReels = {
+    _id : string,
     nameOfFood : string,
     description : string,
     tags : string[],
     videoUrl : string,
     likes : number,
     comments : number,
-    save : number
+    save : number,
+    likeCount : number
 }
