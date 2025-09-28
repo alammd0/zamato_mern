@@ -1,7 +1,21 @@
 import { Button } from "@radix-ui/themes";
 import { Film, Image, User } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { setLogoutUser } from "../../../redux/slice/userAuthSlice";
 
 export default function SideBar({activeTab, setActiveTab} : {activeTab : string, setActiveTab : React.Dispatch<React.SetStateAction<string>>}) {
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const  clickLogout = () => {
+        dispatch(setLogoutUser())
+        navigate("/user/login");
+        toast.success("You have been logged out successfully");
+    }
+
     return (
         <div className="h-screen flex">
             <div className="w-64 bg-card border-r border-border p-4 flex flex-col">
@@ -9,24 +23,9 @@ export default function SideBar({activeTab, setActiveTab} : {activeTab : string,
                <h1 className="text-2xl font-bold text-primary mb-6">FoodReel</h1>
 
                <div className="flex flex-col gap-8">
-                    {/* <div className="w-full">
-                        <Button
-                            variant="ghost"
-                            className="custom-btn"
-                            // style={{ cursor: "pointer", width: "100%", display: "flex", justifyContent: "flex-start", gap: "8px",
-                            //     backgroundColor : "oklch(0.40 0.08 40)", color : "white",
-                            // }}
-                            // className="flex items-center gap-3 rounded-xl bg-black text-white hover:bg-neutral-800"
-                        >
-                            <HomeIcon className="h-5 w-5" />
-                            <span className="font-semibold">Home</span>
-                        </Button>
-                    </div> */}
-
                     <div>
                         <Button variant="ghost"
                         onClick={() => setActiveTab("reels")}
-                        //  style={{ cursor: "pointer", width: "100%", display: "flex", justifyContent: "flex-start", gap: "8px" }}
                          className={`custom-btn ${activeTab === "reels" ? "active-btn" : ""}`}>
                             <Film className="h-5 w-5" />
                             Reels
@@ -62,6 +61,8 @@ export default function SideBar({activeTab, setActiveTab} : {activeTab : string,
                         color: "black",
                         backgroundColor: "oklch(0.95 0.01 85)",
                       }}
+
+                      onClick={clickLogout}
                     variant="outline">
                        Logout
                    </Button>
